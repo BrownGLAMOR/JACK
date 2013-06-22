@@ -13,23 +13,30 @@ import javax.xml.validation.Validator;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-//import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * The auction factory class creates auctions from their corresponding DOM Node.
+ * Each node is expected to contain at least two attributes "id" and "type"
+ * which are used in the construction of every auction. In addition, these nodes
+ * can define any number of elements which will be pased to the auction as a map
+ * of key values pairs for configuration.
+ */
 public class AuctionFactory {
 
     public static Auction newAuction(Node node) {
+
+        // TODO: Validate the node against the auction schema
 
         Element element = (Element)node;
         int id = Integer.parseInt(element.getAttribute("id"));
         String type = element.getAttribute("type");
 
         Auction auction = null;
-        if (type.equals("FantasyFootballAuction")) {
-            auction = new FantasyFootballAuction(id);
-        //} else if (type.equals("SealedBidAuction")) {
-        //} else if (type.equals("AscendingAuction")) {
+        if (type.equals("AscendingAuction")) {
+            auction = new AscendingAuction(id);
         //} else if (type.equals("DescendingAuction")) {
+        //} else if (type.equals("SealedBidAuction")) {
         } else {
             System.out.println("Unknown auction: " + type);
             return null;
@@ -42,7 +49,8 @@ public class AuctionFactory {
     private static Schema getSchema() {
         try {
             URL pathname = AuctionFactory.class.getResource("auction.xsd");
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            SchemaFactory sf =
+                SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return sf.newSchema(new File(pathname.toURI()));
         } catch (Exception e) {
             System.out.println(e);

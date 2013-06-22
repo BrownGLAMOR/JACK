@@ -12,8 +12,22 @@ import java.util.logging.Logger;
 import jack.server.ClientHandler;
 import jack.scheduler.Task;
 
+/**
+ * The auction class is the base class for all auction implementations. It it
+ * responsible for running the auction and handles the serialization and
+ * deserialization of all messages to and from the clients. Subclasses should
+ * define MessageHandlers for each message type that they wish to respond to.
+ * When that message type is recieved by this class it will forward the message
+ * to the appropriate handler. In addition, auction implementations can override
+ * their choice of functions below to gain even more control over their
+ * interactions with the clients.
+ */
 public abstract class Auction extends Task
 {
+    /* Message keys required by this auction*/
+    protected final String SESSION_KEY = "sessionId";
+    protected final String AUCTION_KEY = "auctionId";
+
     /** The parameters used to initialize this auction */
     protected Map<String, String> params = new HashMap<String, String>();
 
@@ -163,6 +177,26 @@ public abstract class Auction extends Task
                     Map<String, String> args =
                         toMap(Arrays.copyOfRange(keyVals, 1, keyVals.length));
 
+                    // Check if this message was intended for this auction
+
+                    if (!args.containsKey(SESSION_KEY)) {
+                        LOGGER.warning("Invalid message: no " + SESSION_KEY);
+                        continue;
+                    }
+
+                    if (!args.containsKey(AUCTION_KEY)) {
+                        LOGGER.warning("Invalid message: no " + AUCTION_KEY);
+                        continue;
+                    }
+
+                    // Silently ignore messages meant for other auctions
+
+                    int sessionId = Integer.parseInt(args.get(SESSION_KEY));
+                    int auctionId = Integer.parseInt(args.get(AUCTION_KEY));
+                    if (sessionId != getSessionId() || auctionId != getAuctionId()) {
+                        continue;
+                    }
+
                     // Pass the message to the appropriate handler and
                     // ignore any unknown messages.
 
@@ -183,10 +217,28 @@ public abstract class Auction extends Task
         }
 
         // Finally resolve the message, unregister this auction from the
-        // ComThreads and set the state to be ended.
+        // ClientHandlers and set the state to be ended.
 
         resolve();
         unregister();
+
+        // TODO: This is currently an unfortunate hack which is necessary
+        // because of the multithreaded nature of the scheduler. As soon as
+        // we set the state to ended then the scheduler will try to launch
+        // additional auctions in their own threads. If any auction
+        // implementations decided to send a message to their clients in the
+        // resolve function (which most will) then there is a chance that
+        // clients will not receive this message until the after the next
+        // auction starts. This is clearly undesirable behavior for clients
+        // which want to know the results of the previous auction before moving
+        // onto the next.
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         setState(STATE_ENDED);
     }
 
@@ -230,8 +282,8 @@ public abstract class Auction extends Task
      * @param args A key value map of arguments to pass with that message
      */
     protected final void sendMessage(String type, Map<String, String> args) {
-        args.put("sessionId", Integer.toString(getSessionId()));
-        args.put("auctionId", Integer.toString(getAuctionId()));
+        args.put(SESSION_KEY, Integer.toString(getSessionId()));
+        args.put(AUCTION_KEY, Integer.toString(getAuctionId()));
 
         String message = type + toString(args);
         for (ClientHandler client : clients) {
