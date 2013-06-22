@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- Attribute definitions -->
+
+<xs:attribute name="id" type="xs:nonNegativeInteger"/>
+<xs:attribute name="type" type="xs:string"/>
+
+<!-- Auction definition -->
+
+<xs:element name="auction">
+    <xs:complexType>
+        <xs:attribute ref="id" use="required"/>
+        <xs:attribute ref="type" use="required"/>
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>
