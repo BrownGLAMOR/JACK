@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>JACK Fantasy Football Auction Draft</title>
+    <script language="javascript">var STATIC_URL="{{STATIC_URL}}"</script>
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}ffad/draft.css">
+    <script src="{{STATIC_URL}}ffad/everything.js"></script>
+    {% if not registered %}
+    <script src="{{STATIC_URL}}ffad/register.js"></script>
+    {% endif %}
+  </head>
+  <body>
+    <div class="ffad_container">
+      <div id="banner" style="background-image: url({{STATIC_URL}}/ffad/ffad_header.png);"></div>
+
+      <div class="manager_container">
+      {% for manager in managers %}
+        {% cycle 'style0' 'style1' 'style2' 'style3' 'style4' 'style5' 'style6' 'style7' 'style8' 'style9' 'style10' as style silent %}
+        <div class="manager {{style}}" id={{manager.id}}>
+          <div class="name">{{manager.name}}</div>
+          <img class="picture" src="{{STATIC_URL}}ffad/stripes.png">
+          <div class="budget">{{manager.budget}}</div>
+          <div class="value">{{manager.value}}</div>
+        </div>
+      {% endfor %}
+      </div>
+
+      <!-- Layout the current auction information -->
+
+      <div id="auction">
+        <div class="player">
+          <img class="picture" src="{{STATIC_URL}}ffad/silhouette.png">
+          <div class="name" id="auction_name"></div>
+          <div class="position", id="auction_position"></div>
+          <div class="value", id="auction_value"></div>
+        </div>
+        <div class="timer" id="auction_timer">0:00</div>
+        <div class="auction_bid">
+          <table>
+            <tr>
+              <td class="label">Highest Bid</td>
+              <td class="value" id="winning_bid"></td>
+            </tr>
+            <tr>
+              <td class="label">Bidder</td>
+              <td class="value" id="winning_bidder"></td>
+            </tr>
+            <!--
+            <tr>
+              <td class="label">Their Est. Value</td>
+              <td class="value" id="winning_value"></td>
+            </tr>
+            <tr>
+              <td class="label">New Est. Value</td>
+              <td class="value" id="winning_new_value"></td>
+            </tr>
+            -->
+          </table>
+        </div>
+        <div class="place_bid">
+          <form id="place_bid_form">{% csrf_token %}
+            <table>
+              <tr>
+                <td><input type="text" name="bid"></td>
+              </tr>
+              <tr>
+                <td class="label"><input type="submit" value="Place Bid"></td>
+              </tr>
+              <!--
+              <tr>
+                <td class="label">Your Est. Value</td>
+                <td class="value"></td>
+              </tr>
+              <tr>
+                <td class="label">New Est. Value</td>
+                <td class="value"></td>
+              </tr>
+              -->
+            </table>
+          </form>
+        </div>
+      </div>
+
+      <!-- Layout the auction schedule -->
+
+      <div class="player_container">
+        <div class="label">Schedule</div>
+        <div class="scrolling_container">
+          <div class="scrolling_area">
+            <table class="sortable scrollable">
+              <thead>
+                <tr>
+                  <th class="order">Order</th>
+                  <th class="position">Position</th>
+                  <th class="name">Name</th>
+                  <th class="value">Est. Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- This section of the table can initially be empty. We add an
+                invisible row here so that sorttable.js can correctly determine
+                the types of the elements in these columns even if there are not
+                yet any *real* columns.-->
+                <tr style="display:none;">
+                  <td class="order">0</td>
+                  <td class="position">a</td>
+                  <td class="name">a</td>
+                  <td class="value">0</td>
+                </tr>
+                {% for player in players %}
+                {% if player.manager %}
+                <tr id={{player.order}} class="drafted">
+                {% else %}
+                <tr id={{player.order}}>
+                {% endif %}
+                  <td class="order">{{player.order}}</td>
+                  <td class="position">{{player.position}}</td>
+                  <td class="name">{{player.name}}</td>
+                  <td class="value">{{player.value}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="team_container">
+        <div class="label">Teams</div>
+        <div class="scrolling_container">
+          <div class="scrolling_area">
+            <table class="scrollable">
+              <thead>
+                <tr>
+                  <th class="position">Position</th>
+                  <th class="name">Name</th>
+                  <th class="value">Est. Value</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for position in draft.quota %}
+                <tr>
+                  <td class="position">{{position}}</td>
+                  <td class="name"><td>
+                  <td class="value"><td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
