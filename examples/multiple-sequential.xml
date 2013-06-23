@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jack>
+
+    <!-- Auction specifications -->
+    <auction id="1" type="AscendingAuction"/>
+    <auction id="2" type="AscendingAuction"/>
+    <auction id="3" type="AscendingAuction"/>
+    <auction id="4" type="AscendingAuction"/>
+    <auction id="5" type="AscendingAuction"/>
+    <auction id="6" type="AscendingAuction"/>
+    <auction id="7" type="AscendingAuction"/>
+    <auction id="8" type="AscendingAuction"/>
+    <auction id="9" type="AscendingAuction"/>
+
+    <!-- Auction schedule -->
+    <schedule>
+        <sequential>
+            <task auctionId="1"/>
+            <task auctionId="2"/>
+            <task auctionId="3"/>
+        </sequential>
+        <sequential>
+            <task auctionId="4"/>
+            <task auctionId="5"/>
+            <task auctionId="6"/>
+        </sequential>
+        <sequential>
+            <task auctionId="7"/>
+            <task auctionId="8"/>
+            <task auctionId="9"/>
+        </sequential>
+    </schedule>
+</jack>
