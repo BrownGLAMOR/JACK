@@ -1,20 +1,16 @@
-/**
- * @author TJ Goff  goff.tom@gmail.com
- * @version 1.0.0
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License version 2.1 as published
- * by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * This class defines a Valuation function by assigning a linear and/or an
- * exponential scoring factor to the number of a type of good owned by a client.
- * If the client has multiple types of goods, the value of each type is computed
- * separately, and the total score awarded to the player is the sum of these
- * values.  That is, the marginal value of a good is independent of number of
- * goods a client has of other types, though the exponential factor for the
- * particular type of good under consideration allows for complementarity or
- * substitutability (marginal goods of the same type become worth more or less
- * depending on how many of that type of good the client already has).
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package jack.valuations;
@@ -27,6 +23,20 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author TJ Goff  goff.tom@gmail.com
+ * @version 1.0.0
+ *
+ * This class defines a Valuation function by assigning a linear and/or an
+ * exponential scoring factor to the number of a type of good owned by a client.
+ * If the client has multiple types of goods, the value of each type is computed
+ * separately, and the total score awarded to the player is the sum of these
+ * values.  That is, the marginal value of a good is independent of number of
+ * goods a client has of other types, though the exponential factor for the
+ * particular type of good under consideration allows for complementarity or
+ * substitutability (marginal goods of the same type become worth more or less
+ * depending on how many of that type of good the client already has).
+ */
 public class AdditiveValuation implements Valuation
 {
     //Stores parameters from config file. "name_of_good" -> [params]

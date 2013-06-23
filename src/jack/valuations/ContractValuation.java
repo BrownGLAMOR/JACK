@@ -1,17 +1,16 @@
-/**
- * @author TJ Goff  goff.tom@gmail.com
- * @version 1.0.0
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License version 2.1 as published
- * by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * This class defines a Valuation function that uses contracts to assign a score
- * to a combination of goods.  The score is determined by selecting the
- * (hopefully) optimal combination of contracts that are to be satisfied using
- * the available goods.  WARNING: Solving this combinatorial optimization
- * problem for large sets of goods and contracts can quickly become
- * computationally intractable.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package jack.valuations;
@@ -29,6 +28,17 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.regex.*;
 
+/**
+ * @author TJ Goff  goff.tom@gmail.com
+ * @version 1.0.0
+ *
+ * This class defines a Valuation function that uses contracts to assign a score
+ * to a combination of goods.  The score is determined by selecting the
+ * (hopefully) optimal combination of contracts that are to be satisfied using
+ * the available goods.  WARNING: Solving this combinatorial optimization
+ * problem for large sets of goods and contracts can quickly become
+ * computationally intractable.
+ */
 public class ContractValuation implements Valuation {
 
     //Stores parameters from config file. "name_of_good" -> [params]
